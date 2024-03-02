@@ -9,11 +9,11 @@ class BoundBox:
         self.y1 = bound_box[1]
         self.x2 = bound_box[2]
         self.y2 = bound_box[3]
-        self.mid = ( (self.x1 + self.x2)/2 + (self.y1 + self.y2)/2)
+        self.mid = ( (self.x1 + self.x2)/2 ,  (self.y1 + self.y2)/2)
 
     # 
     def overlaps(self, box): 
-        return self.intersects((box.x1, box.y1)) or self.intersects((box.x1, box.y2)) or self.intersects((box.x2, box.y2)) or self.intersects((box.x2, box.y1))
+        return self.intersects((box.x1, box.y1)) or self.intersects((box.x1, box.y2)) or self.intersects((box.x2, box.y2)) or self.intersects((box.x2, box.y1)) or self.intersects(box.mid)
 
 
     # self is BoundBox object  in code using for Dining table points 

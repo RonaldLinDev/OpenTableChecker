@@ -5,7 +5,7 @@ import numpy as np
 from BoundBox import BoundBox
 
 # load model
-model = YOLO('yolov8x.pt')
+model = YOLO('models/yolov8x.pt')
 
 # person, backpack, suitcase, handbag, dinner table laptop
 
@@ -15,30 +15,29 @@ boxes = results[0].boxes.xyxy.cpu().numpy()
 classes = results[0].boxes.cls.cpu().numpy()
 names = results[0].names
 
-setOfTables = []
-setOfNonTables = []
+listOfTables = []
+listOfNonTables = []
 tableCount = 0
-filledTableCount = 0
 
 for ele in zip(boxes, classes):
     box = ele[0]
     label = names[ele[1]]
     print(box, label)
     if label == 'dining table':
-        setOfTables.append(box)
+        listOfTables.append(box)
     else:
-        setOfNonTables.append(box) # dont care
+        listOfNonTables.append(box) # dont care
 
-for table in setOfTables:
+filled = [0 for table in listOfTables]
+
+for idx, table  in enumerate(listOfTables):
     ele = BoundBox(table)
-    tableCount += 1
-    for object in setOfNonTables:
+    for object in listOfNonTables:
         if ele.overlaps(BoundBox(object)):
-            # setOfTables.remove(table)
-            # setOfNonTables.remove(object)
-            filledTableCount += 1
+            filled[idx] = 1
 
-print(f'filled {filledTableCount} out of {tableCount} tables')
 
-# img = Image.fromarray(results[0].plot())
-# img.show()
+print(f'filled {sum(filled)} out of {len(filled)} tables')
+
+img = Image.fromarray(results[0].plot())
+img.show()
