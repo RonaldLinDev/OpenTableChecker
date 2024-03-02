@@ -8,8 +8,15 @@ from BoundBox import BoundBox
 model = YOLO('models/yolov8x.pt')
 
 # person, backpack, suitcase, handbag, dinner table laptop
+IMAGE =  "imgs/"+ "ohio.jpeg"
+IMG_SIZE = 3200
 
-results = model(r'imgs/image.webp', imgsz = 3200, agnostic_nms = True, classes = [0,24, 26, 27, 60,63,16])
+results = model(IMAGE,
+                 imgsz = IMG_SIZE,
+                iou = 0.5, 
+                agnostic_nms = True,
+                retina_masks = True,
+                classes = [0,24, 26, 27, 60,63,16])
 
 boxes = results[0].boxes.xyxy.cpu().numpy()
 classes = results[0].boxes.cls.cpu().numpy()
