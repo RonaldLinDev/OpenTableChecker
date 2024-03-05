@@ -8,7 +8,7 @@ from BoundBox import BoundBox
 model = YOLO('models/yolov8x.pt')
 
 # person, backpack, suitcase, handbag, dinner table laptop
-IMAGE =  "imgs/"+ "ohio.jpeg"
+IMAGE =  "imgs/"+ "IMG_7695.jpeg"
 IMG_SIZE = 3200
 
 results = model(IMAGE,
