@@ -9,9 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
     <style>
         html {
-                background-color: rgb(253, 248, 237); 
-            }
-
+            background-color: rgb(253, 248, 237); 
+        }
         body {
             font-family: "Lato", sans-serif;
             margin-top: 5%;
@@ -19,26 +18,20 @@
             margin-right: 10%;
             margin-left: 10%;
             text-align: center;
-            line-height: 1.6;
         }
-
         h1 {
             font-size: 30px;
             font-weight: normal;
-
         }
-
         h2 {
             font-size: 25px;
             font-weight: normal;
         }
-
         p {
             font-size: 25px;
-            font-weight: normal;
             margin-bottom: 0%;
+            font-weight: normal;
         }
-
         .highlight {
             padding: 8px 80px;
             background-color: rgb(88, 18, 158);
@@ -46,8 +39,8 @@
             opacity: 90%;
             color: white;
             border-radius: 10px;
+            border: 4px solid rgb(207, 188, 79);
         }
-
         .sub-highlight {
             padding: 5px 20px;
             background-color: rgb(88, 18, 158);
@@ -55,8 +48,15 @@
             opacity: 90%;
             color: white;
             border-radius: 10px;
+            border: 3px solid rgb(207, 188, 79);
         }
-
+        .sub-content-container {
+            margin-top: 7%; 
+            position: relative; 
+            display: inline-block;
+            margin-left: 2%;
+            margin-right: 2%;
+        }
     </style>
 </head>
 
@@ -71,44 +71,61 @@
                 <div id="total-population-container">
                     <p id="total-population"> {{total_population}} </p>
                 </div>
-                <div id="sub-content-container" style="margin-top: 7%">
-                    <span class="sub-highlight">
-                        <h2 id="sub-header-text">Occupancy on Floor 1</h2>
-                    </span>
-                    <div id="floor-1">
-                        <p id="open-tables"># of open tables: {{num}} </p>
-                        <p id="open-chairs" style="margin: 0;"># of open chairs: {{num}} </p>
+                <div id="occupancy" style="float: center">
+                    <div class="sub-content-container">
+                        <span class="sub-highlight">
+                            <h2 id="sub-header-text">Occupancy on Floor 1</h2>
+                        </span>
+                        <div id="floor-1">
+                            <p id="open-tables"># of open tables: {{num}} </p>
+                            <p id="open-chairs" style="margin: 0;"># of open chairs: {{num}} </p>
+                        </div>
+                    </div>
+                    <div class="sub-content-container">
+                        <span class="sub-highlight">
+                            <h2 id="sub-header-text">Occupancy on Floor 2</h2>
+                        </span>
+                        <div id="floor-2">
+                            <p id="open-tables"># of open tables: {{num}} </p>
+                            <p id="open-chairs" style="margin: 0;"># of open chairs: {{num}} </p>
+                        </div>
+                    </div>
+                    <div class="sub-content-container">
+                        <span class="sub-highlight">
+                            <h2 id="sub-header-text">Occupancy on Floor 3</h2>
+                        </span>
+                        <div id="floor-3">
+                            <p id="open-tables"># of open tables: {{num}} </p>
+                            <p id="open-chairs" style="margin: 0;"># of open chairs: {{num}} </p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div id="bottom-container" style="margin-bottom: 35%">
-
-            <div id="left-container" style="float:left">
+        <div id="bottom-container">
+            <div id="left-container" style="display: inline-block; margin-right: 5%; margin-left: 5%">
                 <div id="left-header-container">
                     <span class="highlight">
                         <h1 id="header-text">West Library</h1>
                     </span>
                 </div>
                 <div id="left-container-content">
-                    <p id="left-container-population">{{west_population}}</p>
+                    <p id="left-container-population" style="margin-bottom: 5%">{{west_population}}</p>
                 </div>
             </div>
 
-            <div id="right-container" style="float: right">
+            <div id="right-container" style="display: inline-block; margin-right: 5%; margin-left: 5%">
                 <div id="right-header-container">
                     <span class="highlight">
                         <h1 id="header-text">East Library</h1>
                     </span>
                 </div>
                 <div id="right-container-content">
-                    <p id="right-container-population">{{east_population}}</p>
+                    <p id="right-container-population" style="margin-bottom: 5%">{{east_population}}</p>
                 </div>
             </div>
-
         </div>
-
     </div>
 </body>
 </html>
