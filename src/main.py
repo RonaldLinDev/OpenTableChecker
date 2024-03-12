@@ -14,10 +14,7 @@ IMAGE_SIZE = 3200
 
 
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 186ad1f5de3cd1dbe4695e5991f4bf89da6467ef
 def get_bounding_boxes(model, IMAGE_SIZE, IMAGE):
     results = model(IMAGE,
                     imgsz = IMAGE_SIZE,
