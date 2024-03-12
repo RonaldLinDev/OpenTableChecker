@@ -9,19 +9,17 @@ import sys
 model = YOLO('models/yolov8x.pt')
 
 # person, backpack, suitcase, handbag, dinner table laptop
-IMAGE =  "imgs/"+ "ohio.jpeg"
-IMAGE_SIZE = 3200
+image_file =  "imgs/"+ "odeimg.jpg"
 
 
 
 
-def get_bounding_boxes(model, IMAGE_SIZE, IMAGE):
-    results = model(IMAGE,
-                    imgsz = IMAGE_SIZE,
-                    iou = 0.5, 
-                    agnostic_nms = True,
-                    retina_masks = True,
-                    classes = [0,24, 26, 27, 56, 60,63,16])
+def get_bounding_boxes(model, image_file):
+    width, height = Image.open(image_file).size
+    results = model(image_file,
+                    imgsz = (width, height),
+                    iou = 0.5,
+                    classes = [0,24, 26, 27, 56, 60, 63, 16])
 
     boxes = results[0].boxes.xyxy.cpu().numpy()
     classes = results[0].boxes.cls.cpu().numpy()
@@ -46,10 +44,10 @@ def count_tables(boxes, classes, names):
     filled = [0 for table in listOfTables]
 
     for idx, table  in enumerate(listOfTables):
-        ele = BoundBox(table
+        ele = BoundBox(table)
         for object in listOfNonTables:
             if ele.overlaps(BoundBox(object)):
-                filled[idx] = 2
+                filled[idx] = 1
     return sum(filled), len(filled) # filled tables, count tables
 
 def count_chairs(boxes, classes, names):
@@ -75,11 +73,10 @@ def count_chairs(boxes, classes, names):
     return sum(filled), len(filled), len(listOfPeople)
 
 
-
     
 
 if __name__ == '__main__':
-    boxes, classes, names  = get_bounding_boxes(model, IMAGE_SIZE, IMAGE)
+    boxes, classes, names  = get_bounding_boxes(model, image_file)
     filled_tables, num_tables = count_tables(boxes, classes, names)
     filled_chairs, num_chairs, num_people = count_chairs(boxes, classes, names)
     print(f'filled {filled_tables} out of {num_tables} tables')

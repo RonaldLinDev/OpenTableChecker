@@ -4,17 +4,24 @@ from threading import Thread
 app = Flask(__name__)
 
 
-occupancy_of_tables = {}
+
+#default values
+total_population = 42
+west_population = 35
+east_population = 7
+
 
 @app.route('/', methods = ['GET', 'POST'])
 def display_home():
+    global total_population, west_population, east_population
     if request.method == 'GET':
-        return render_template('index.html') ## some var
+        return render_template('index.html', total_population = total_population, west_population = west_population, east_population = east_population) ## some var
     else:
         updated_data = json.loads(request.get_json())
-        for locations in updated_data:
-            occupancy_of_tables[locations] = updated_data[locations]
-            return jsonify("successfully updated data")
+        total_population = 42
+        west_population = 35
+        east_population = 7
+        return jsonify("successfully updated data")
         
 
 
