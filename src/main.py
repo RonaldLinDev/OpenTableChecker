@@ -3,6 +3,7 @@ import cv2
 from PIL import Image
 import numpy as np 
 from BoundBox import BoundBox
+import sys
 
 # load model
 model = YOLO('models/yolov8x.pt')
@@ -16,7 +17,7 @@ listOfTables = []
 listOfNonTables = []
 tableCount = 0
 
-def get_bounding_boxes(model, IMAGE, IMAGE_SIZE):
+def get_bounding_boxes(model, IMAGE_SIZE, IMAGE):
     results = model(IMAGE,
                     imgsz = IMAGE_SIZE,
                     iou = 0.5, 
@@ -27,6 +28,8 @@ def get_bounding_boxes(model, IMAGE, IMAGE_SIZE):
     boxes = results[0].boxes.xyxy.cpu().numpy()
     classes = results[0].boxes.cls.cpu().numpy()
     names = results[0].names
+    img = Image.fromarray(results[0].plot())
+    img.show()
     return boxes, classes, names 
 
 def count_tables(boxes, classes, names):
@@ -51,4 +54,4 @@ def count_tables(boxes, classes, names):
     print(f'filled {sum(filled)} out of {len(filled)} tables')
 
 if __name__ == '__main__':
-    count_tables(get_bounding_boxes(model, IMAGE, IMAGE_SIZE))
+    count_tables(get_bounding_boxes(model, IMAGE_SIZE, IMAGE))
