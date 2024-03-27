@@ -6,17 +6,13 @@ from BoundBox import BoundBox
 import sys
 
 # load model
-model = YOLO('models/yolov8x.pt')
 
 # person, backpack, suitcase, handbag, dinner table laptop
-image_file =  "imgs/"+ "images.jpeg"
 
+def get_bounding_boxes(image_arr, model = YOLO('models/yolov8x.pt')) :
 
-
-
-def get_bounding_boxes(model, image_file):
-    width, height = Image.open(image_file).size
-    results = model(image_file,
+    width, height = image_arr.shape[0], image_arr.shape[1]
+    results = model(image_arr,
                     imgsz = (width, height),
                     iou = 0.5,
                     classes = [0,24, 26, 27, 56, 60, 63, 16])
@@ -76,7 +72,8 @@ def count_chairs(boxes, classes, names):
     
 
 if __name__ == '__main__':
-    boxes, classes, names  = get_bounding_boxes(model, image_file)
+    ret, image_arr = cv2.VideoCapture(0).read()
+    boxes, classes, names  = get_bounding_boxes(model, image_arr)
     filled_tables, num_tables = count_tables(boxes, classes, names)
     filled_chairs, num_chairs, num_people = count_chairs(boxes, classes, names)
     print(f'filled {filled_tables} out of {num_tables} tables')
