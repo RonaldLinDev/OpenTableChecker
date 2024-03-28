@@ -11,9 +11,9 @@ import sys
 
 def get_bounding_boxes(image_arr, model = YOLO('models/yolov8x.pt')) :
 
-    width, height = image_arr.shape[0], image_arr.shape[1]
+    height, width = image_arr.shape[1], image_arr.shape[0]
     results = model(image_arr,
-                    imgsz = (width, height),
+                    imgsz = (height, width),
                     iou = 0.5,
                     classes = [0,24, 26, 27, 56, 60, 63, 16])
 
@@ -73,7 +73,7 @@ def count_chairs(boxes, classes, names):
 
 if __name__ == '__main__':
     ret, image_arr = cv2.VideoCapture(0).read()
-    boxes, classes, names  = get_bounding_boxes(model, image_arr)
+    boxes, classes, names  = get_bounding_boxes(image_arr)
     filled_tables, num_tables = count_tables(boxes, classes, names)
     filled_chairs, num_chairs, num_people = count_chairs(boxes, classes, names)
     print(f'filled {filled_tables} out of {num_tables} tables')
