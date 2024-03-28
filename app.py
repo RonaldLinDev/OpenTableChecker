@@ -1,38 +1,20 @@
 import json
 from flask import Flask, request, render_template, jsonify
-import mysql.connector
+import pymssql
 from threading import Thread
 app = Flask(__name__)
-
-# db connection details change later depending on how ronald configs 
-db_name = "db_name"
-username = "username"
-password = "password"
-
-#example db schema 
-# id 
-# time taken time/day/month/year
-# people
-# total chair 
-# taken chair
-# total table 
-# taken table 
 
 # Issue - need to implement some thing to only pull the mot recent information 
 # otherwise we would lose PAST data 
 data = dict()
 
-# Database connection details (replace with yours)
-db_name = "your_database_name"
-username = "your_username"
-password = "your_password"
-
 try:
-    connection = mysql.connector.connect(
-        host="localhost",
-        user=username,
-        password=password,
-        database=db_name
+    connection = pymssql.connect(
+        server='occupancydatabase.database.windows.net',
+        user='odegaardOccupancyAdbs',
+        password='325odeOcc!@&',
+        database='OdegaardOccupancyDBS',
+        as_dict=True
     )
     cursor = connection.cursor()
     cursor.execute("SELECT * FROM occupancy ORDER BY created_at DESC LIMIT 3")
@@ -45,7 +27,7 @@ try:
         location_info = dict(zip(cols[1:], row[1:])) 
         data[location] = location_info
 
-except mysql.connector.Error as err:
+except pymssql.connector.Error as err:
     print("Error connecting to database:", err)
 
 finally:
