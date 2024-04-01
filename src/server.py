@@ -19,7 +19,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         with conn:
             print('Connected by', addr)
             try:
-                with open('db_config.json') as f:
+                with open('login.json') as f:
                     db_config = json.load(f)
                 conn = pymssql.connect(
                     server=db_config['server'],
