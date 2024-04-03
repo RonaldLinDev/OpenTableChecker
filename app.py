@@ -4,54 +4,50 @@ import pymssql
 from threading import Thread
 app = Flask(__name__)
 
-# Issue - need to implement some thing to only pull the mot recent information 
+# Issue - need to implements
+#  some thing to only pull the mot recent information 
 # otherwise we would lose PAST data 
 data = dict()
 
-try:
-    connection = pymssql.connect(
-        server='occupancydatabase.database.windows.net',
-        user='odegaardOccupancyAdbs',
-        password='325odeOcc!@&',
-        database='OdegaardOccupancyDBS',
-        as_dict=True
-    )
-    cursor = connection.cursor()
-    cursor.execute("SELECT * FROM occupancy ORDER BY created_at DESC LIMIT 3")
-    cursor.fetchall()
+with open('login.json') as f:
+    db_config = json.load(f)
+    conn = pymssql.connect(
+        server=db_config['server'],
+        user=db_config['user'],
+        password=db_config['password'],
+        database=db_config['database'],
+        as_dict = True
+    )         
+    cursor = conn.cursor()
+    cursor.execute("SELECT TOP 3 * FROM [dbo].[occupancy] ORDER BY time DESC, id;")
+    rdata = cursor.fetchall()
+
     # (data) should be a dictionary formatted -> 'location name' = (dict) column name : column information
-    # it would be nice to have a time taken in the data base 
-    cols = [description[0] for description in cursor.description]
-    for row in cursor: 
-        location = row[0]
-        location_info = dict(zip(cols[1:], row[1:])) 
-        data[location] = location_info
+    cols = [description[0] for description in cursor.description] #first col is id or floor number 
 
-except pymssql.connector.Error as err:
-    print("Error connecting to database:", err)
+    for row in rdata:
+        location = row['id']
+        data[location] = {key: value for key, value in row.items() if key != 'id'}
 
-finally:
-    if connection:
-        connection.close()
-    print("Connection closed.")
-
-
+print(data)
+conn.close()
 # the rendered template takes a dictionary of element id's and values 
 # e.g. {{ population }}  --> value for population will be put in that space 
 # THERE IS PROBABLY A BETTER WAY TO DO THIS BUT IT WOULD REQUIRE MORE COMPLEX FLASK
         # total population
-        # population, open tables and chairs on each floor 
+#         # population, open tables and chairs on each floor 
 context = {}
-context['total_population'] = data[1]['population'] + data[2]['population'] + data[3]['population']
+context['total_population'] = data.get(1).get('population')+ data.get(2).get('population') + data.get(3).get('population')
 for floor in (1, 2, 3):
-    open_tables = data[floor]['total_tables'] - data[floor]['taken_tables']
-    open_chairs = data[floor]['total_chairs'] - data[floor]['taken_chairs']
-    context['floor_' + str(floor) + '_otables'] = open_tables
-    context['floor_' + str(floor) + '_ochairs'] = open_chairs
+    floor_row  = data.get(floor)
+    print(floor_row)
+    print(floor_row.get('total_table'))
+    #open_tables = int(data.get(floor).get('total_tables')) - int(data.get(floor).get('taken_tables'))
+    #open_chairs = int(data.get(floor).get('total_chairs')) - int(data.get(floor).get('taken_chairs'))
+    #context['floor_' + str(floor) + '_otables'] = open_tables
+    #context['floor_' + str(floor) + '_ochairs'] = open_chairs
 
 # access in html template as floor_#_otables 
-
-
 @app.route('/', methods = ['GET', 'POST'])
 def display_home():
     if request.method == 'GET':
