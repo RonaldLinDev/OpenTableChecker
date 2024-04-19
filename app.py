@@ -1,3 +1,7 @@
+# HTML RENDERING IS READY TO GO WE JUST NEED TO FORMAT THE WEBSITE AND ILL CHANGE THE VARIABLE NAMES 
+# 
+
+
 import json
 from flask import Flask, request, render_template, jsonify
 import pymssql
@@ -39,6 +43,9 @@ conn.close()
 context = {}
 context['total_population'] = data.get(1).get('population')+ data.get(2).get('population') + data.get(3).get('population')
 for floor in (1, 2, 3):
+
+
+
     floor_row  = data.get(floor)
     print(floor_row)
     print(floor_row.get('total_table'))
